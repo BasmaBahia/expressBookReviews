@@ -26,43 +26,59 @@ public_users.post("/register", (req,res) => {
 });
 
 // Get the book list available in the shop
-public_users.get('/',function (req, res) {
-    res.send(books)
+public_users.get('/', function (req, res) {
+    let booksPromise = new Promise((resolve, reject) => {
+        resolve(books)
+    })
+
+    booksPromise.then((data) => res.send(data))
 });
 
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
-    const isbn = req.params.isbn
-    let selected_book = books[isbn]
-    res.send(selected_book);
+    let isbnPromise = new Promise((resolve, reject) => {
+        const isbn = req.params.isbn
+        let selected_book = books[isbn]
+        resolve(selected_book)
+    })
+
+    isbnPromise.then((data) => res.send(data));
  });
   
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
-    const author = req.params.author
-    let selected_author = []
+    let authorPromise = new Promise((resolve, reject) => {
+        const author = req.params.author
+        let selected_author = []
 
-    for (const book in books) {
-        if (books[book].author == author) {
-            selected_author.push(books[book])
+        for (const book in books) {
+            if (books[book].author == author) {
+                selected_author.push(books[book])
+            }
         }
-    }
 
-    res.send(selected_author)
+        resolve(selected_author)
+    })
+    
+    authorPromise.then((data) => res.send(data))
 });
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
-    const title = req.params.title
-    let selected_title = []
+    let titlePromise = new Promise((resolve, reject) => {
+        const title = req.params.title
+        let selected_title = []
 
-    for (const book in books) {
-        if (books[book].title == title) {
-            selected_title.push(books[book])
+        for (const book in books) {
+            if (books[book].title == title) {
+                selected_title.push(books[book])
+            }
         }
-    }
 
-    res.send(selected_title)
+        resolve(selected_title)
+    })
+
+    titlePromise.then((data) => res.send(data))
 });
 
 //  Get book review
